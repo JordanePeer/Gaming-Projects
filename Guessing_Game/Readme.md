@@ -1,4 +1,4 @@
-# Gaming-Projects
+# Guessing Game
 
 This is a Python program using the Tkinter library to create a GUI-based guessing game. 
 The program generates a random number between 1 and 100 and prompts the user to guess the number. 
