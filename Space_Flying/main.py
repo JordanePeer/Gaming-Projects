@@ -19,7 +19,7 @@ BULLET_HIT_SOUND = pygame.mixer.Sound(os.path.join('Gaming_Projects', 'Space_Fly
 BULLET_HIT_SOUND.set_volume(0.05)
 
 
-# Define the Spaceship's and starts' designs and characteristics 
+# Define the Spaceship's and meteors' designs and characteristics 
 HEALTH_FONT = pygame.font.SysFont('comicsans', 40)
 WINNER_FONT = pygame.font.SysFont('comicsans', 100)
 
@@ -33,12 +33,12 @@ RED_SPACESHIP = pygame.transform.rotate(
 RED_HIT = pygame.USEREVENT + 1
 
 
-STAR_WIDTH, STAR_HEIGHT, STAR_VEL = 10, 20, 3
+METEOR_WIDTH, METEOR_HEIGHT, METEOR_VEL = 10, 20, 3
 
 
 
 # Define the Design and Functionality of the Game
-def draw_window(player, elapsed_time, stars, player_health):
+def draw_window(player, elapsed_time, meteors, player_health):
     WIN.blit(BG, (0, 0))
 
     time_text = FONT.render(f"Time: {round(elapsed_time)}s", 1, "white")
@@ -49,8 +49,8 @@ def draw_window(player, elapsed_time, stars, player_health):
 
     WIN.blit(RED_SPACESHIP, (player.x, player.y))
 
-    for star in stars:
-        pygame.draw.rect(WIN, "white", star)
+    for meteor in meteors:
+        pygame.draw.rect(WIN, "white", meteor)
 
     pygame.display.update()
 
@@ -65,15 +65,15 @@ def handle_player_movement(keys_pressed, player):
     if keys_pressed[pygame.K_DOWN]: # DOWN
         player.y += SPACESHIP_VEL
 
-# Define the logic of the Hit by Stars Event
-def handle_stars(stars, player):
-    for star in stars[:]:
-        star.y += STAR_VEL
-        if star.y > HEIGHT:
-            stars.remove(star)
-        elif star.y + star.height >= player.y and star.colliderect(player):
+# Define the logic of the Hit by Meteors Event
+def handle_meteors(meteors, player):
+    for meteor in meteors[:]:
+        meteor.y += METEOR_VEL
+        if meteor.y > HEIGHT:
+            meteors.remove(meteor)
+        elif meteor.y + meteor.height >= player.y and meteor.colliderect(player):
             pygame.event.post(pygame.event.Event(RED_HIT))
-            stars.remove(star)
+            meteors.remove(meteor)
 
 # Define the logic and Functionability of the Game
 def main():
@@ -89,25 +89,25 @@ def main():
     start_time = time.time()
     elapsed_time = 0
 
-    star_add_increment = 2000
-    star_count = 0
+    meteor_add_increment = 2000
+    meteor_count = 0
 
-    stars = []
+    meteors = []
     hit = False
 
     while run:
-        star_count += clock.tick(FPS)
-        elapsed_time = time.time() - start_time
+        meteor_count += clock.tick(FPS)
+        elapsed_time = time.time() - meteor_time
 
-        if star_count > star_add_increment:
+        if meteor_count > meteor_add_increment:
             for _ in range(3):
-                star_x = random.randint(0, WIDTH - STAR_WIDTH)
-                star = pygame.Rect(star_x, -STAR_HEIGHT,
-                                   STAR_WIDTH, STAR_HEIGHT)
-                stars.append(star)
+                meteor_x = random.randint(0, WIDTH - METEOR_WIDTH)
+                meteor = pygame.Rect(meteor_x, -METEOR_HEIGHT,
+                                   METEOR_WIDTH, METEOR_HEIGHT)
+                meteors.append(meteor)
 
-            star_add_increment = max(200, star_add_increment - 50)
-            star_count = 0
+            meteor_add_increment = max(200, meteor_add_increment - 50)
+            meteor_count = 0
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -126,10 +126,10 @@ def main():
             pygame.time.delay(4000)
             break
 
-        draw_window(player, elapsed_time, stars, player_health)
+        draw_window(player, elapsed_time, meteors, player_health)
         keys_pressed = pygame.key.get_pressed()
         handle_player_movement(keys_pressed, player)
-        handle_stars(stars, player)
+        handle_meteors(meteors, player)
 
 
     main()
