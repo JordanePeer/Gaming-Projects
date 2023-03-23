@@ -97,7 +97,7 @@ def main():
 
     while run:
         meteor_count += clock.tick(FPS)
-        elapsed_time = time.time() - meteor_time
+        elapsed_time = time.time() - start_time
 
         if meteor_count > meteor_add_increment:
             for _ in range(3):
